@@ -36,6 +36,7 @@ public class GeolocatorPlugin implements FlutterPlugin, ActivityAware {
 
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
+            System.out.println("##### jave GeoLocatorPlugin.serviceConnection.onServiceConnected(), serviceConnection: " + this);
           Log.d(TAG, "Geolocator foreground service connected");
           if (service instanceof GeolocatorLocationService.LocalBinder) {
             initialize(((GeolocatorLocationService.LocalBinder) service).getLocationService());
@@ -44,6 +45,7 @@ public class GeolocatorPlugin implements FlutterPlugin, ActivityAware {
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
+            System.out.println("##### jave GeoLocatorPlugin.serviceConnection.onServiceDisconnected(), serviceConnection: " + this);
           Log.d(TAG, "Geolocator foreground service disconnected");
           if (foregroundLocationService != null) {
             foregroundLocationService.setActivity(null);
@@ -60,6 +62,7 @@ public class GeolocatorPlugin implements FlutterPlugin, ActivityAware {
   @Nullable private ActivityPluginBinding pluginBinding;
 
   public GeolocatorPlugin() {
+      System.out.println("##### java GeolocatorPlugin constructor, instance: " + this);
     permissionManager = new PermissionManager();
     geolocationManager = new GeolocationManager();
     locationAccuracyManager = new LocationAccuracyManager();
@@ -99,6 +102,7 @@ public class GeolocatorPlugin implements FlutterPlugin, ActivityAware {
 
   @Override
   public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
+      System.out.println("##### jave GeoLocatorPlugin.onAttachedToEngine(), instance: " + this);
     methodCallHandler =
         new MethodCallHandlerImpl(
             this.permissionManager, this.geolocationManager, this.locationAccuracyManager);
@@ -118,13 +122,14 @@ public class GeolocatorPlugin implements FlutterPlugin, ActivityAware {
 
   @Override
   public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
+      System.out.println("##### java GeoLocatorPlugin.onDetachedFromEngine(), instance: " + this);
     unbindForegroundService(binding.getApplicationContext());
     dispose();
   }
 
   @Override
   public void onAttachedToActivity(@NonNull ActivityPluginBinding binding) {
-
+      System.out.println("##### java GeoLocatorPlugin.onAttachedToActivity(), activity: " + binding.getActivity() + ", instance: " + this);
     Log.d(TAG, "Attaching Geolocator to activity");
     this.pluginBinding = binding;
     registerListeners();
@@ -141,16 +146,19 @@ public class GeolocatorPlugin implements FlutterPlugin, ActivityAware {
 
   @Override
   public void onDetachedFromActivityForConfigChanges() {
+      System.out.println("##### java GeoLocatorPlugin.onDetachedFromActivityForConfigChanges(), instance: " + this);
     onDetachedFromActivity();
   }
 
   @Override
   public void onReattachedToActivityForConfigChanges(@NonNull ActivityPluginBinding binding) {
+      System.out.println("##### java GeoLocatorPlugin.onReattachedToActivityForConfigChanges(), instance: " + this);
     onAttachedToActivity(binding);
   }
 
   @Override
   public void onDetachedFromActivity() {
+      System.out.println("##### java GeoLocatorPlugin.onDetachedFromActivity(), instance: " + this);
     Log.d(TAG, "Detaching Geolocator from activity");
     deregisterListeners();
     if (methodCallHandler != null) {
@@ -185,6 +193,7 @@ public class GeolocatorPlugin implements FlutterPlugin, ActivityAware {
   }
 
   private void bindForegroundService(Context context) {
+      System.out.println("##### java GeoLocatorPlugin.bindForegroundService(), instance: " + this);
     context.bindService(
         new Intent(context, GeolocatorLocationService.class),
         serviceConnection,
@@ -192,6 +201,7 @@ public class GeolocatorPlugin implements FlutterPlugin, ActivityAware {
   }
 
   private void unbindForegroundService(Context context) {
+      System.out.println("##### java GeoLocatorPlugin.unbindForegroundService(), instance: " + this);
     if (foregroundLocationService != null) {
       foregroundLocationService.flutterEngineDisconnected();
     }
@@ -200,6 +210,7 @@ public class GeolocatorPlugin implements FlutterPlugin, ActivityAware {
 
   private void initialize(GeolocatorLocationService service) {
     Log.d(TAG, "Initializing Geolocator services");
+      System.out.println("##### jave GeoLocatorPlugin.initialize(), service: " + service + ", instance: " + this);
     foregroundLocationService = service;
     foregroundLocationService.flutterEngineConnected();
 
@@ -209,6 +220,7 @@ public class GeolocatorPlugin implements FlutterPlugin, ActivityAware {
   }
 
   private void dispose() {
+      System.out.println("##### java GeoLocatorPlugin.dispose(), instance: " + this);
     Log.d(TAG, "Disposing Geolocator services");
     if (methodCallHandler != null) {
       methodCallHandler.stopListening();

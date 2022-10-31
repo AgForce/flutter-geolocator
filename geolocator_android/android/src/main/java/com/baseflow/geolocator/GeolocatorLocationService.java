@@ -49,30 +49,35 @@ public class GeolocatorLocationService extends Service {
   @Override
   public void onCreate() {
     super.onCreate();
+      System.out.println("##### java GolocatorLocationService.onCreate()");
     Log.d(TAG, "Creating service.");
     geolocationManager = new GeolocationManager();
   }
 
   @Override
   public int onStartCommand(Intent intent, int flags, int startId) {
-    return START_STICKY;
+      System.out.println("##### java GolocatorLocationService.onStartCommand()");
+      return START_STICKY;
   }
 
   @Nullable
   @Override
   public IBinder onBind(Intent intent) {
+      System.out.println("##### java GolocatorLocationService.onBind()");
     Log.d(TAG, "Binding to location service.");
     return binder;
   }
 
   @Override
   public boolean onUnbind(Intent intent) {
+      System.out.println("##### java GolocatorLocationService.onUnbind()");
     Log.d(TAG, "Unbinding from location service.");
     return super.onUnbind(intent);
   }
 
   @Override
   public void onDestroy() {
+      System.out.println("##### java GolocatorLocationService.onDestroy()");
     Log.d(TAG, "Destroying location service.");
 
     stopLocationService();
@@ -85,6 +90,7 @@ public class GeolocatorLocationService extends Service {
   }
 
   public boolean canStopLocationService(boolean cancellationRequested) {
+      System.out.println("##### java GolocatorLocationService.canStopLocationService(), candellationRequested: " + cancellationRequested + ", listenerCount: " + listenerCount);
     if(cancellationRequested) {
        return listenerCount == 1;
     }
@@ -92,14 +98,14 @@ public class GeolocatorLocationService extends Service {
   }
 
   public void flutterEngineConnected() {
-
     connectedEngines++;
+      System.out.println("##### java GolocatorLocationService.flutterEngineConnected(), connectedEngines: " + connectedEngines);
     Log.d(TAG, "Flutter engine connected. Connected engine count " + connectedEngines);
   }
 
   public void flutterEngineDisconnected() {
-
     connectedEngines--;
+      System.out.println("##### java GolocatorLocationService.flutterEngineDisconnected(), connectedEngines: " + connectedEngines);
     Log.d(TAG, "Flutter engine disconnected. Connected engine count " + connectedEngines);
   }
 
@@ -109,6 +115,7 @@ public class GeolocatorLocationService extends Service {
       EventChannel.EventSink events) {
 
     listenerCount++;
+      System.out.println("##### java GolocatorLocationService.startLocationService(), forceLocationManager: " + forceLocationManager + ", geolocationManager: " + geolocationManager);
     if (geolocationManager != null) {
       locationClient =
           geolocationManager.createLocationClient(
@@ -127,6 +134,7 @@ public class GeolocatorLocationService extends Service {
 
   public void stopLocationService() {
     listenerCount--;
+      System.out.println("##### java GolocatorLocationService.stopLocationService(), listenerCount: " + listenerCount);
     Log.d(TAG, "Stopping location service.");
     if (locationClient != null && geolocationManager != null) {
       geolocationManager.stopPositionUpdates(locationClient);
@@ -134,7 +142,9 @@ public class GeolocatorLocationService extends Service {
   }
 
   public void enableBackgroundMode(ForegroundNotificationOptions options) {
+      System.out.println("##### java GolocatorLocationService.enableBackgroundMode()");
     if (backgroundNotification != null) {
+        System.out.println("##### java GolocatorLocationService.onBind(), backgroundNotification: " + backgroundNotification);
       Log.d(TAG, "Service already in foreground mode.");
       changeNotificationOptions(options);
     } else {
@@ -153,6 +163,7 @@ public class GeolocatorLocationService extends Service {
 
   @SuppressWarnings("deprecation")
   public void disableBackgroundMode() {
+      System.out.println("##### java GolocatorLocationService.disableBackgroundMode(), isForeground: " + isForeground);
     if (isForeground) {
       Log.d(TAG, "Stop service in foreground.");
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -174,15 +185,19 @@ public class GeolocatorLocationService extends Service {
   }
 
   public void setActivity(@Nullable Activity activity) {
+      System.out.println("##### java GolocatorLocationService.setActivity(), activity: " + activity);
     this.activity = activity;
   }
 
   private void releaseWakeLocks() {
+      System.out.println("##### java GolocatorLocationService.releaseWakeLocks()");
     if (wakeLock != null && wakeLock.isHeld()) {
+        System.out.println("##### java GolocatorLocationService.releaseWakeLocks() -> wakeLock is held");
       wakeLock.release();
       wakeLock = null;
     }
     if (wifiLock != null && wifiLock.isHeld()) {
+        System.out.println("##### java GolocatorLocationService.releaseWakeLocks() -> wifiLock is held");
       wifiLock.release();
       wifiLock = null;
     }
@@ -190,8 +205,10 @@ public class GeolocatorLocationService extends Service {
 
   @SuppressLint("WakelockTimeout")
   private void obtainWakeLocks(ForegroundNotificationOptions options) {
+      System.out.println("##### java GolocatorLocationService.obtainWakeLocks()");
     releaseWakeLocks();
     if (options.isEnableWakeLock()) {
+        System.out.println("##### java GolocatorLocationService.obtainWakeLocks() -> options.isEnablewakeLock = true");
       PowerManager powerManager =
           (PowerManager) getApplicationContext().getSystemService(Context.POWER_SERVICE);
       if (powerManager != null) {
@@ -201,6 +218,7 @@ public class GeolocatorLocationService extends Service {
       }
     }
     if (options.isEnableWifiLock()) {
+        System.out.println("##### java GolocatorLocationService.obtainWakeLocks() -> options.isEnableWifiLock = true");
       WifiManager wifiManager =
           (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
       if (wifiManager != null) {

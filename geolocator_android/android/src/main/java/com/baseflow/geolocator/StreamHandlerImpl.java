@@ -34,17 +34,19 @@ class StreamHandlerImpl implements EventChannel.StreamHandler {
   @Nullable private LocationClient locationClient;
 
   public StreamHandlerImpl(PermissionManager permissionManager) {
+      System.out.println("##### java StreamHandlerImpl constructor, instance: " + this);
     this.permissionManager = permissionManager;
     geolocationManager = new GeolocationManager();
   }
 
   public void setForegroundLocationService(
       @Nullable GeolocatorLocationService foregroundLocationService) {
+      System.out.println("##### java StreamHandlerImpl.setForegroundLocationService, service: " + foregroundLocationService + ", instance: " + this);
     this.foregroundLocationService = foregroundLocationService;
   }
 
   public void setActivity(@Nullable Activity activity) {
-
+      System.out.println("##### java StreamHandlerImpl.setActivity, activity: " + activity + ", instance: " + this);
     if (activity == null && locationClient != null && channel != null) {
       stopListening();
     }
@@ -60,6 +62,7 @@ class StreamHandlerImpl implements EventChannel.StreamHandler {
    * <p>This should be cleaned with {@link #stopListening} once the messenger is disposed of.
    */
   void startListening(Context context, BinaryMessenger messenger) {
+      System.out.println("##### java StreamHandlerImpl.startListening, preexisting EventChannel: " + channel + ", instance: " + this);
     if (channel != null) {
       Log.w(TAG, "Setting a event call handler before the last was disposed.");
       stopListening();
@@ -76,6 +79,7 @@ class StreamHandlerImpl implements EventChannel.StreamHandler {
    * <p>Does nothing if {@link #startListening} hasn't been called, or if we're already stopped.
    */
   void stopListening() {
+      System.out.println("##### java StreamHandlerImpl.stopListening(), EventChannel: " + channel + ", instance: " + this);
     if (channel == null) {
       Log.d(TAG, "Tried to stop listening when no MethodChannel had been initialized.");
       return;
@@ -89,8 +93,10 @@ class StreamHandlerImpl implements EventChannel.StreamHandler {
   @SuppressWarnings({"ConstantConditions", "unchecked"})
   @Override
   public void onListen(Object arguments, EventChannel.EventSink events) {
+      System.out.println("##### java StreamHandlerImpl.onListen(), instance: " + this);
     try {
       if (!permissionManager.hasPermission(this.context)) {
+          System.out.println("##### java StreamHandlerImpl.onListen() -> no permission!");
         events.error(
             ErrorCodes.permissionDenied.toString(),
             ErrorCodes.permissionDenied.toDescription(),
@@ -98,6 +104,7 @@ class StreamHandlerImpl implements EventChannel.StreamHandler {
         return;
       }
     } catch (PermissionUndefinedException e) {
+        System.out.println("##### java StreamHandlerImpl.onListen() -> undefined permission!");
       events.error(
           ErrorCodes.permissionDefinitionsNotFound.toString(),
           ErrorCodes.permissionDefinitionsNotFound.toDescription(),
@@ -106,6 +113,7 @@ class StreamHandlerImpl implements EventChannel.StreamHandler {
     }
 
     if (foregroundLocationService == null) {
+        System.out.println("##### java StreamHandlerImpl.onListen() -> no foreground service!");
       Log.e(TAG, "Location background service has not started correctly");
       return;
     }
@@ -125,10 +133,12 @@ class StreamHandlerImpl implements EventChannel.StreamHandler {
               (Map<String, Object>) map.get("foregroundNotificationConfig"));
     }
     if (foregroundNotificationOptions != null) {
+        System.out.println("##### java StreamHandlerImpl.onListen() -> foregroundNotificationOptions != null");
       Log.e(TAG, "Geolocator position updates started using Android foreground service");
       foregroundLocationService.startLocationService(forceLocationManager, locationOptions, events);
       foregroundLocationService.enableBackgroundMode(foregroundNotificationOptions);
     } else {
+        System.out.println("##### java StreamHandlerImpl.onListen() -> foregroundNotificationOptions == null, instance: " + this);
       Log.e(TAG, "Geolocator position updates started");
       locationClient =
           geolocationManager.createLocationClient(
@@ -145,10 +155,12 @@ class StreamHandlerImpl implements EventChannel.StreamHandler {
 
   @Override
   public void onCancel(Object arguments) {
+      System.out.println("##### java StreamHandlerImpl.onCancel(), instance: " + this);
     disposeListeners(true);
   }
 
   private void disposeListeners(boolean cancelled) {
+      System.out.println("##### java StreamHandlerImpl.disposeListeners(), cancelled: " + cancelled + ", instance: " + this);
     Log.e(TAG, "Geolocator position updates stopped");
     if (foregroundLocationService != null && foregroundLocationService.canStopLocationService(cancelled)) {
       foregroundLocationService.stopLocationService();

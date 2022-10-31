@@ -209,6 +209,7 @@ class LocationManagerClient implements LocationClient, LocationListener {
 
   @Override
   public synchronized void onLocationChanged(Location location) {
+      System.out.println("##### java LocationManagerClient.onLocationChanged(), location:" + location.getLatitude() + ", " + location.getLongitude());
     float desiredAccuracy =
         locationOptions != null ? accuracyToFloat(locationOptions.getAccuracy()) : 50;
 

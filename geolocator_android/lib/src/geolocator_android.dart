@@ -152,9 +152,12 @@ class GeolocatorAndroid extends GeolocatorPlatform {
   Stream<Position> getPositionStream({
     LocationSettings? locationSettings,
   }) {
+    print('##### dart getPositionStream()');
     if (_positionStream != null) {
+      print('##### dart positionStream already exists, returning existing one');
       return _positionStream!;
     }
+    print('##### dart location settings: ${locationSettings?.toJson().toString()}');
     var originalStream = _eventChannel.receiveBroadcastStream(
       locationSettings?.toJson(),
     );
@@ -166,6 +169,7 @@ class GeolocatorAndroid extends GeolocatorPlatform {
       positionStream = positionStream.timeout(
         timeLimit,
         onTimeout: (s) {
+          print('##### dart positionStream timeout');
           _positionStream = null;
           s.addError(TimeoutException(
             'Time limit reached while waiting for position update.',
@@ -181,6 +185,7 @@ class GeolocatorAndroid extends GeolocatorPlatform {
             Position.fromMap(element.cast<String, dynamic>()))
         .handleError(
       (error) {
+        print('##### dart positionStream error: ${error.toString()}');
         if (error is PlatformException) {
           error = _handlePlatformException(error);
         }
