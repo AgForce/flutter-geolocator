@@ -75,43 +75,44 @@ class LocationManagerClient implements LocationClient, LocationListener {
 
   private static String getBestProvider(
       LocationManager locationManager, LocationAccuracy accuracy) {
-    Criteria criteria = new Criteria();
-
-    criteria.setBearingRequired(false);
-    criteria.setAltitudeRequired(false);
-    criteria.setSpeedRequired(false);
-
-    switch (accuracy) {
-      case lowest:
-        criteria.setAccuracy(Criteria.NO_REQUIREMENT);
-        criteria.setHorizontalAccuracy(Criteria.NO_REQUIREMENT);
-        criteria.setPowerRequirement(Criteria.NO_REQUIREMENT);
-        break;
-      case low:
-        criteria.setAccuracy(Criteria.ACCURACY_COARSE);
-        criteria.setHorizontalAccuracy(Criteria.ACCURACY_LOW);
-        criteria.setPowerRequirement(Criteria.NO_REQUIREMENT);
-        break;
-      case medium:
-        criteria.setAccuracy(Criteria.ACCURACY_COARSE);
-        criteria.setHorizontalAccuracy(Criteria.ACCURACY_MEDIUM);
-        criteria.setPowerRequirement(Criteria.POWER_MEDIUM);
-        break;
-      default:
-        criteria.setAccuracy(Criteria.ACCURACY_FINE);
-        criteria.setHorizontalAccuracy(Criteria.ACCURACY_HIGH);
-        criteria.setPowerRequirement(Criteria.POWER_HIGH);
-        break;
-    }
-
-    String provider = locationManager.getBestProvider(criteria, true);
-
-    if (provider.trim().isEmpty()) {
-      List<String> providers = locationManager.getProviders(true);
-      if (providers.size() > 0) provider = providers.get(0);
-    }
-
-    return provider;
+//    Criteria criteria = new Criteria();
+//
+//    criteria.setBearingRequired(false);
+//    criteria.setAltitudeRequired(false);
+//    criteria.setSpeedRequired(false);
+//
+//    switch (accuracy) {
+//      case lowest:
+//        criteria.setAccuracy(Criteria.NO_REQUIREMENT);
+//        criteria.setHorizontalAccuracy(Criteria.NO_REQUIREMENT);
+//        criteria.setPowerRequirement(Criteria.NO_REQUIREMENT);
+//        break;
+//      case low:
+//        criteria.setAccuracy(Criteria.ACCURACY_COARSE);
+//        criteria.setHorizontalAccuracy(Criteria.ACCURACY_LOW);
+//        criteria.setPowerRequirement(Criteria.NO_REQUIREMENT);
+//        break;
+//      case medium:
+//        criteria.setAccuracy(Criteria.ACCURACY_COARSE);
+//        criteria.setHorizontalAccuracy(Criteria.ACCURACY_MEDIUM);
+//        criteria.setPowerRequirement(Criteria.POWER_MEDIUM);
+//        break;
+//      default:
+//        criteria.setAccuracy(Criteria.ACCURACY_FINE);
+//        criteria.setHorizontalAccuracy(Criteria.ACCURACY_HIGH);
+//        criteria.setPowerRequirement(Criteria.POWER_HIGH);
+//        break;
+//    }
+//
+//    String provider = locationManager.getBestProvider(criteria, true);
+//
+//    if (provider.trim().isEmpty()) {
+//      List<String> providers = locationManager.getProviders(true);
+//      if (providers.size() > 0) provider = providers.get(0);
+//    }
+//
+//    return provider;
+      return LocationManager.GPS_PROVIDER;
   }
 
   private static float accuracyToFloat(LocationAccuracy accuracy) {
