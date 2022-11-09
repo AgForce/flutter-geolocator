@@ -168,6 +168,8 @@ class LocationManagerClient implements LocationClient, LocationListener {
       PositionChangedCallback positionChangedCallback,
       ErrorCallback errorCallback) {
 
+    System.out.println("##### java LocationManagerClient.startPositionUpdates()");
+
     if (!checkLocationService(context)) {
       errorCallback.onError(ErrorCodes.locationServicesDisabled);
       return;
@@ -180,6 +182,7 @@ class LocationManagerClient implements LocationClient, LocationListener {
         this.locationOptions != null ? this.locationOptions.getAccuracy() : LocationAccuracy.best;
 
     this.currentLocationProvider = getBestProvider(this.locationManager, locationAccuracy);
+    System.out.println("##### java LocationManagerClient.startPositionUpdates(), provider: " + this.currentLocationProvider);
 
     if (this.currentLocationProvider.trim().isEmpty()) {
       errorCallback.onError(ErrorCodes.locationServicesDisabled);
