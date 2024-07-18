@@ -216,8 +216,6 @@ class FusedLocationClient implements LocationClient {
       @NonNull PositionChangedCallback positionChangedCallback,
       @NonNull ErrorCallback errorCallback) {
 
-      System.out.println("##### FusedLocationClient.startPositionUpdates");
-
     this.positionChangedCallback = positionChangedCallback;
     this.errorCallback = errorCallback;
 
