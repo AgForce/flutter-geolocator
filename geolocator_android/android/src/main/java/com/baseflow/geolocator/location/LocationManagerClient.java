@@ -151,8 +151,6 @@ class LocationManagerClient implements LocationClient, LocationListenerCompat {
       PositionChangedCallback positionChangedCallback,
       ErrorCallback errorCallback) {
 
-      System.out.println("##### LocationManagerClient.startPositionUpdates");
-
     if (!checkLocationService(context)) {
       errorCallback.onError(ErrorCodes.locationServicesDisabled);
       return;
