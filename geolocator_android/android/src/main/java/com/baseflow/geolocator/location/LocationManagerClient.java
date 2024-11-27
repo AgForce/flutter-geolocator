@@ -83,6 +83,7 @@ class LocationManagerClient implements LocationClient, LocationListenerCompat {
       final List<String> enabledProviders = locationManager.getProviders(true);
 
       if (forceProvider != null) {
+          System.out.println("###### forcing provider " + forceProvider);
           return enabledProviders.contains(forceProvider) ? forceProvider : null;
       } else if (accuracy == LocationAccuracy.lowest) {
           return LocationManager.PASSIVE_PROVIDER;
