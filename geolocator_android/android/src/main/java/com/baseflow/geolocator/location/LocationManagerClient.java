@@ -81,7 +81,7 @@ class LocationManagerClient implements LocationClient, LocationListenerCompat {
       @Nullable String forceProvider) {
 
       final List<String> enabledProviders = locationManager.getProviders(true);
-
+      System.out.println("##### forceProvider: " + forceProvider);
       if (forceProvider != null) {
           System.out.println("###### forcing provider " + forceProvider);
           return enabledProviders.contains(forceProvider) ? forceProvider : null;
